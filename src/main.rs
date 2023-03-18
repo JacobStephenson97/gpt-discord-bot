@@ -170,8 +170,8 @@ impl EventHandler for Handler {
                 commands.create_application_command(|command| commands::image::register(command))
             })
             .await;
+            println!("{} is connected!", ready.user.name,);
         }
-        println!("{} is connected!", ready.user.name,);
     }
 }
 

@@ -61,7 +61,6 @@ pub async fn run(_options: &[CommandDataOption]) -> Option<(String, String)> {
             .unwrap();
 
         let image = res["data"][0]["url"].as_str().unwrap().to_string();
-        println!("{}", image);
         Some((image, prompt.to_owned()))
     } else {
         None
