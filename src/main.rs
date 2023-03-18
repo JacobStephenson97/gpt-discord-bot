@@ -1,3 +1,5 @@
+mod commands;
+
 use std::{env, time::Duration};
 
 use serde::{Deserialize, Serialize};
@@ -7,11 +9,10 @@ use serenity::{
     collector::MessageCollectorBuilder,
     framework::StandardFramework,
     futures::StreamExt,
-    model::prelude::{GuildChannel, Message},
+    model::prelude::{interaction::Interaction, GuildChannel, GuildId, Message},
     prelude::{Context, EventHandler, GatewayIntents},
     Client,
 };
-
 struct GptConversation {
     gpt_chat: GptChat,
     thread: GuildChannel,
@@ -136,8 +137,41 @@ impl EventHandler for Handler {
             GptConversation::new(msg, ctx).await.listen().await.unwrap();
         }
     }
-    async fn ready(&self, _: Context, ready: serenity::model::gateway::Ready) {
-        println!("{} is connected!", ready.user.name);
+    async fn interaction_create(&self, ctx: Context, interaction: Interaction) {
+        if let Interaction::ApplicationCommand(command) = interaction {
+            let res = match command.data.name.as_str() {
+                "image" => {
+                    command
+                        .defer(&ctx.http)
+                        .await
+                        .expect("Failed to defer command");
+                    let res = commands::image::run(&command.data.options).await.unwrap();
+                    res
+                }
+                _ => ("Unknown command".to_string(), "Failed".to_string()),
+            };
+
+            if let Err(why) = command
+                .edit_original_interaction_response(&ctx.http, |m| m.content(res.0))
+                .await
+            {
+                println!("Cannot respond to slash command: {}", why);
+            }
+            command
+                .create_followup_message(&ctx.http, |m| m.content(format!("Prompt: {}", res.1)))
+                .await
+                .unwrap();
+        }
+    }
+    async fn ready(&self, ctx: Context, ready: serenity::model::gateway::Ready) {
+        let guilds = ctx.cache.guilds();
+        for guild in guilds {
+            let commands = GuildId::set_application_commands(&guild, &ctx.http, |commands| {
+                commands.create_application_command(|command| commands::image::register(command))
+            })
+            .await;
+        }
+        println!("{} is connected!", ready.user.name,);
     }
 }
 
