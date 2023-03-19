@@ -60,6 +60,20 @@ pub async fn run(_options: &[CommandDataOption]) -> Option<(String, String)> {
             .await
             .unwrap();
 
+        if res["error"] != Value::Null {
+            if res["error"]["message"].to_string().contains("is too long") {
+                return Some((
+                    "The prompt is too long. Please shorten it.".to_string(),
+                    prompt.to_owned(),
+                ));
+            } else {
+                return Some((
+                    "An error occurred. Please try again.".to_string(),
+                    prompt.to_owned(),
+                ));
+            }
+        }
+
         let image = res["data"][0]["url"].as_str().unwrap().to_string();
         Some((image, prompt.to_owned()))
     } else {
