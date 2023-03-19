@@ -45,7 +45,7 @@ pub async fn run(_options: &[CommandDataOption]) -> Option<(String, String)> {
         let body = DalleBody::new(prompt.to_string());
         let body = serde_json::to_string(&body).unwrap();
 
-        let res: Value = reqwest::Client::new()
+        let res: Value = match reqwest::Client::new()
             .post("https://api.openai.com/v1/images/generations")
             .header(
                 "Authorization",
@@ -58,7 +58,15 @@ pub async fn run(_options: &[CommandDataOption]) -> Option<(String, String)> {
             .unwrap()
             .json()
             .await
-            .unwrap();
+        {
+            Ok(res) => res,
+            Err(e) => {
+                return Some((
+                    format!("An error occurred. Please try again. {}", e),
+                    prompt.to_owned(),
+                ));
+            }
+        };
 
         if res["error"] != Value::Null {
             if res["error"]["message"].to_string().contains("is too long") {
