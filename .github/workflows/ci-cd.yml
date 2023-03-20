@@ -48,11 +48,11 @@ jobs:
 #       with:
 #         ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
           
-    - name: Download artifact
-      uses: actions/download-artifact@v2
-      with:
-        name: rust-binary
-        path: target/release/gpt-bot 
+#     - name: Download artifact
+#       uses: actions/download-artifact@v2
+#       with:
+#         name: rust-binary
+#         path: target/release/gpt-bot 
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@v0.1.8
       with:
