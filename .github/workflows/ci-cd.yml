@@ -40,20 +40,27 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
       
-    - name: Install SSH
-      run: sudo apt-get install openssh-client
+#     - name: Install SSH
+#       run: sudo apt-get install openssh-client
       
-    - name: Add SSH key to agent
-      uses: webfactory/ssh-agent@v0.7.0
-      with:
-        ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
+#     - name: Add SSH key to agent
+#       uses: webfactory/ssh-agent@v0.7.0
+#       with:
+#         ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
           
     - name: Download artifact
       uses: actions/download-artifact@v2
       with:
         name: rust-binary
         path: target/release/gpt-bot 
-        
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@v0.1.8
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: whoami
 #     - name: Deploy to server
 #       run: |
 #         scp target/release/gpt-bot ${{ secrets.SERVER_IP }}:~/gpt-bot/
