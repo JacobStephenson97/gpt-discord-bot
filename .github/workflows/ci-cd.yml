@@ -42,7 +42,12 @@ jobs:
       with:
         name: rust-binary
         path: target/release/gpt-bot
-
+        
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.4.2
+      with:
+          ssh-private-key: ${{ secrets.PRIVATE_KEY }}      
+        
     - name: Deploy to server
       run: |
         scp target/release/gpt-bot ${{ secrets.SERVER_IP }}:/gpt-bot
