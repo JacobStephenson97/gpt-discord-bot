@@ -9,28 +9,28 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+#     steps:
+#     - name: Checkout repository
+#       uses: actions/checkout@v2
 
-    - name: Set up Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        profile: minimal
-        toolchain: stable
-        override: true
+#     - name: Set up Rust
+#       uses: actions-rs/toolchain@v1
+#       with:
+#         profile: minimal
+#         toolchain: stable
+#         override: true
 
-    - name: Build
-      uses: actions-rs/cargo@v1
-      with:
-        command: build
-        args: --release
+#     - name: Build
+#       uses: actions-rs/cargo@v1
+#       with:
+#         command: build
+#         args: --release
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: rust-binary
-        path: target/release/gpt-bot
+#     - name: Upload artifact
+#       uses: actions/upload-artifact@v2
+#       with:
+#         name: rust-binary
+#         path: target/release/gpt-bot
 
   deploy:
     runs-on: ubuntu-latest
@@ -60,13 +60,13 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        script: whoami
+        script: mkdir ~/test
 #     - name: Deploy to server
 #       run: |
 #         scp target/release/gpt-bot ${{ secrets.SERVER_IP }}:~/gpt-bot/
 #       env:
 #         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
 
-    - name: Restart service
-      run: |
-        ssh ${{ secrets.SERVER_IP }} "sudo systemctl restart gpt-bot"
+#     - name: Restart service
+#       run: |
+#         ssh ${{ secrets.SERVER_IP }} "sudo systemctl restart gpt-bot"
