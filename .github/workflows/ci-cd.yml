@@ -50,10 +50,10 @@ jobs:
         
     - name: Deploy to server
       run: |
-        scp -i ${{ secrets.PRIVATE_KEY }} target/release/gpt-bot ${{ secrets.SERVER_IP }}:~/gpt-bot/
+        scp target/release/gpt-bot ${{ secrets.SERVER_IP }}:~/gpt-bot/
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
 
     - name: Restart service
       run: |
-        ssh -i ${{ secrets.PRIVATE_KEY }} ${{ secrets.SERVER_IP }} "sudo systemctl restart gpt-bot"
+        ssh ${{ secrets.SERVER_IP }} "sudo systemctl restart gpt-bot"
