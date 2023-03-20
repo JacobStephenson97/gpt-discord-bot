@@ -50,7 +50,7 @@ jobs:
         
     - name: Deploy to server
       run: |
-        scp target/release/gpt-bot ${{ secrets.SERVER_IP }}:/gpt-bot
+        scp target/release/gpt-bot ${{ secrets.SERVER_IP }}:~/gpt-bot/
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
 
