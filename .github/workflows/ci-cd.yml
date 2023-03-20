@@ -30,7 +30,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: rust-binary
-        path: /target/release/gpt_bot
+        path: target/release/gpt-bot
 
   deploy:
     runs-on: ubuntu-latest
@@ -41,7 +41,7 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: rust-binary
-        path: /target/release/gpt_bot
+        path: target/release/gpt-bot
 
     - name: Deploy to server
       run: |
