@@ -64,5 +64,5 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        script: mv ~/gpt-bot/github/workspace/target/release/gpt-bot/gpt-bot ~/gpt-bot/ && chmod +x ~/gpt-bot/gpt-bot && sudo systemctl restart gpt-bot
+        script: mv ~/gpt-bot/github/workspace/target/release/gpt-bot/gpt-bot ~/gpt-bot/ && chmod +x ~/gpt-bot/gpt-bot && systemctl --user restart gpt-service
 
