@@ -53,7 +53,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        source: "/home/runner/work/gpt-discord-bot/gpt-discord-bot/target/release/gpt-bot/github/workspace/target/release/gpt-bot/"
+        source: "/home/runner/work/gpt-discord-bot/gpt-discord-bot/target/release/gpt-bot/"
         target: "~/gpt-bot/"
           
 
@@ -64,5 +64,5 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        script: systemctl restart gpt-bot
+        script: mv ~/gpt-bot/github/workspace/target/release/gpt-bot/gpt-bot ~/gpt-bot/ && systemctl restart gpt-bot
 
