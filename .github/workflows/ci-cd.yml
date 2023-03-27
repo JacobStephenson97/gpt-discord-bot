@@ -1,0 +1,68 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: stable
+        override: true
+
+    - name: Build
+      uses: actions-rs/cargo@v1
+      with:
+        command: build
+        args: --release
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: rust-binary
+        path: target/release/gpt-bot
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Download artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: rust-binary
+        path: target/release/gpt-bot 
+        
+    - name: copy file via ssh password
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        source: "/home/runner/work/gpt-discord-bot/gpt-discord-bot/target/release/gpt-bot/"
+        target: "~/gpt-bot/"
+          
+
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@v0.1.8
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: mv ~/gpt-bot/github/workspace/target/release/gpt-bot/gpt-bot ~/gpt-bot/ && chmod +x ~/gpt-bot/gpt-bot && systemctl --user restart gpt-bot
+
