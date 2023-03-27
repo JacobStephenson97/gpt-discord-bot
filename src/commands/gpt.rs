@@ -106,8 +106,8 @@ impl GptConversation {
     }
     async fn send_message(&mut self, new_message: GptMessage) -> Result<String, reqwest::Error> {
         self.update_max_tokens(&new_message);
-        // println!("Max tokens: {}", self.gpt_chat.max_tokens);
-        // println!("Current tokens: {}", self.current_tokens);
+        println!("Max tokens: {}", self.gpt_chat.max_tokens);
+        println!("Current tokens: {}", self.current_tokens);
 
         self.gpt_chat.messages.push(new_message);
 
