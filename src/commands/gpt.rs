@@ -1,6 +1,5 @@
 use std::{env, time::Duration};
 
-use reqwest::Error;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use serenity::{
@@ -8,14 +7,10 @@ use serenity::{
     collector::MessageCollectorBuilder,
     futures::StreamExt,
     model::prelude::{
-        command::CommandOptionType,
         interaction::{
-            application_command::{
-                ApplicationCommandInteraction, CommandDataOption, CommandDataOptionValue,
-            },
-            InteractionResponseType,
+            application_command::ApplicationCommandInteraction, InteractionResponseType,
         },
-        ChannelId, GuildChannel, Message, UserId,
+        ChannelId, GuildChannel, UserId,
     },
     prelude::Context,
 };
@@ -183,29 +178,11 @@ pub fn register(
     command: &mut builder::CreateApplicationCommand,
 ) -> &mut builder::CreateApplicationCommand {
     command.name("gpt").description("Start a chat with GPT-3.5")
-    // .create_option(|option| {
-    //     option
-    //         .name("prompt")
-    //         .description("a prompt for gpt")
-    //         .kind(CommandOptionType::String)
-    //         .required(true)
-    // })
 }
 pub async fn run(command: &ApplicationCommandInteraction, ctx: Context) {
-    // let _prompt = command
-    //     .data
-    //     .options
-    //     .get(0)
-    //     .unwrap()
-    //     .resolved
-    //     .as_ref()
-    //     .unwrap();
-
-    // if let CommandDataOptionValue::String(prompt) = _prompt {
     GptConversation::new(command.channel_id, ctx, command)
         .await
         .listen()
         .await
         .unwrap();
-    // }
 }

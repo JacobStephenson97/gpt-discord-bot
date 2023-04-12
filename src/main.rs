@@ -14,7 +14,7 @@ struct Handler;
 
 #[async_trait]
 impl EventHandler for Handler {
-    async fn message(&self, ctx: Context, msg: Message) {
+    async fn message(&self, _: Context, msg: Message) {
         if msg.author.bot {
             return;
         }
@@ -43,7 +43,7 @@ impl EventHandler for Handler {
     async fn ready(&self, ctx: Context, ready: serenity::model::gateway::Ready) {
         let guilds = ctx.cache.guilds();
         for guild in guilds {
-            let commands = GuildId::set_application_commands(&guild, &ctx.http, |commands| {
+            let _ = GuildId::set_application_commands(&guild, &ctx.http, |commands| {
                 commands.create_application_command(|command| commands::image::register(command));
                 commands.create_application_command(|command| commands::gpt::register(command))
             })
